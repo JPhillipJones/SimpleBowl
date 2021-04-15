@@ -1,0 +1,106 @@
+﻿@page "/"
+@namespace SimpleBowl.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SimpleBowl</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+  
+    <script>
+
+        function drawBall(x, y, ctx) {
+            //var canvas = document.getElementById("theCanvas");
+            //var ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            ctx.fillStyle = "#000000";
+            ctx.arc(x, y, 30, 0, 15);
+            ctx.fill();
+        }
+
+        function drawPin(x, y, upRight, ctx) {
+            //var canvas = document.getElementById("theCanvas");
+            //var ctx = canvas.getContext("2d");
+            if (upRight) {
+                ctx.beginPath();
+                ctx.arc(x, y, 20, 0, 15);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(x, y, 12, 0, 15);
+                ctx.stroke();
+            }
+            else {
+                ctx.beginPath();
+                ctx.moveTo(x - 15, y - 15);
+                ctx.lineTo(x + 15, y + 15);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(x + 15, y - 15);
+                ctx.lineTo(x - 15, y + 15);
+                ctx.stroke();
+            }
+        }
+
+        function draw(ballX, ballY, pinX, pinY, pinUpright) {
+            var canvas = document.getElementById("theCanvas");
+            var ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, 200, 500);
+            drawBall(ballX, ballY, ctx);
+            for (i = 0; i < 10; i++) {
+                drawPin(pinX[i], pinY[i], pinUpright[i], ctx);
+            }
+
+        }
+
+        function setDisplay(message){
+            document.getElementById("Display").textContent = message;
+        }
+        function setScore(message) {
+            document.getElementById("Score").textContent = message;
+        }
+        function setScoreHeader(message) {
+            document.getElementById("ScoreHeader").textContent = message;
+        }
+
+        function logState(frame, roll, score) {
+            console.log("Frame: " + frame + " Roll: " + roll + " Score: " + score);
+        }
+        function logMessage(message) {
+            console.log(message);
+        }
+        function renderScoresTable(message) {
+            var container = document.getElementById("scoresContainer");
+            container.innerHTML = message;
+
+        }
+
+    </script>
+</head>
+<body>
+    <app>
+        <component type="typeof(App)" render-mode="ServerPrerendered" />
+    </app>
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+    <script src="~/js/SimpleBowl.js"></script>
+</body>
+</html>

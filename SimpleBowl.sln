@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31019.35
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBowl", "SimpleBowl\SimpleBowl.csproj", "{BADD8372-2F27-412A-B67E-FD4F32ACF5E7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BADD8372-2F27-412A-B67E-FD4F32ACF5E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BADD8372-2F27-412A-B67E-FD4F32ACF5E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BADD8372-2F27-412A-B67E-FD4F32ACF5E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BADD8372-2F27-412A-B67E-FD4F32ACF5E7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {28B54104-E005-4981-94EB-49C7BC640475}
+	EndGlobalSection
+EndGlobal
