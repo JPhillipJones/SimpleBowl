@@ -19,7 +19,6 @@
         <h5><span id="Display">-Click to Start-</span></h5>
         <div class="wrapper">
             <div @ref="dvGame" style="border:solid;border-width:medium;width:205px" @onclick="OnClick">
-                @*<BECanvas Height="500" Width="300" @ref="theCanvas"></BECanvas>*@
                 <canvas Height="500" Width="300" id="theCanvas"></canvas>
                 <br />
             </div>
@@ -43,14 +42,16 @@
 
 @code {
 
-    ElementReference dvGame;
+        ElementReference dvGame;
 
     private BowlingGame game = new BowlingGame();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        runTestData();
-        RunGame();
+        if (game.state == "start")
+        {
+            await runTestData();
+        }
     }
 
     public async Task Delay(int millis)
@@ -64,13 +65,13 @@
 
     }
 
-    private async void RunGame()
+    private async Task RunGame()
     {
         while (game.state == "running")
         {
             game.display = "Frame: " + (game.currentFrame.ToString() + " Roll: " + game.currentRoll.ToString());
             await renderScoresTable();
-            await Delay(130);
+            await Delay(10);
 
             if (game.ball.rolling)
             {
@@ -78,16 +79,12 @@
             }
             else
             {
-                await ocillateBall(game.ball);
+                ocillateBall(game.ball);
             }
-
             await setDisplay();
             await setScore();
             await draw(game.ball, game.pins);
-
         }
-        await setDisplay();
-        await setScore();
 
     }
 
@@ -107,7 +104,6 @@
             game.calculateScore();
             game.resetBall();
             game.advanceFrameAndRoll();
-            //InvokeAsync(StateHasChanged);
             await JSRuntime.InvokeAsync<object>("logState", game.currentFrame, game.currentRoll, game.score);
             //check to see if we need to reset the pins
             if (game.currentFrame > currentFrame.number)
@@ -115,8 +111,6 @@
                 game.resetPins();
             }
         }
-        return;
-
     }
 
     public void checkCollision()
@@ -166,7 +160,7 @@
     }
 
     //Input
-    private async void OnClick(MouseEventArgs eventArgs)
+    private async Task OnClick(MouseEventArgs eventArgs)
     {
 
         if (game.state == "running")
@@ -178,12 +172,13 @@
             game.setUp();
             game.state = "running";
             game.display ="Frame: " + (game.currentFrame.ToString() + " Roll: " + game.currentRoll.ToString());
-
+            await RunGame();
         }
+
     }
 
     //Visuals
-    public async Task ocillateBall(Ball ball)
+    public void ocillateBall(Ball ball)
     {
         if (ball.X > 165)
         {
@@ -195,7 +190,6 @@
         }
 
         ball.X += (ball.ocillate * 5);
-        return;
     }
 
     public async Task draw(Ball ball, List<Pin> pins)
@@ -213,19 +207,16 @@
 
         await JSRuntime.InvokeAsync<object>("draw", ball.X, ball.Y, pinX, pinY, pinUpright);
 
-        return;
     }
 
     public async Task setDisplay()
     {
         await JSRuntime.InvokeAsync<object>("setDisplay", game.display);
-        return;
     }
     public async Task setScore()
     {
         await JSRuntime.InvokeAsync<object>("setScore", game.score.ToString());
         await JSRuntime.InvokeAsync<object>("setScoreHeader", game.scoreHeader);
-        return;
     }
 
     public async Task renderScoresTable()
@@ -250,7 +241,7 @@
     }
 
     //Simple Tests
-    public void runTestData()
+    public async Task runTestData()
     {
         var testgame = new BowlingGame();
         testgame.currentFrame = 10;
@@ -276,7 +267,7 @@
         testgame.frames[9].rolls[1].score = 1;
         testgame.frames[9].rolls[2].score = 7;
         testgame.calculateScore();
-        JSRuntime.InvokeAsync<object>("logMessage", "Test-Score Calculation 1:" + testgame.score.ToString());
+        await JSRuntime.InvokeAsync<object>("logMessage", "Test-Score Calculation 1:" + testgame.score.ToString());
         //
         testgame.setUp();
         testgame.frames[0].rolls[0].score = 10;
@@ -292,7 +283,7 @@
         testgame.frames[9].rolls[1].score = 10;
         testgame.frames[9].rolls[2].score = 10;
         testgame.calculateScore();
-        JSRuntime.InvokeAsync<object>("logMessage", "Test-Score Perfect Game:" + testgame.score.ToString());
+        await JSRuntime.InvokeAsync<object>("logMessage", "Test-Score Perfect Game:" + testgame.score.ToString());
 
         testgame.setUp();
         testgame.currentFrame = 10;
@@ -305,8 +296,8 @@
         }
 
         testgame.advanceFrameAndRoll();
-        JSRuntime.InvokeAsync<object>("logMessage", "Test: Frame 10 - Just rolled double strike");
-        JSRuntime.InvokeAsync<object>("logMessage", "Passed? " + (testgame.currentFrame == 10 && testgame.currentRoll == 3 && testgame.pins.Where(a =>a.upRight).Count() == 10).ToString());
+        await JSRuntime.InvokeAsync<object>("logMessage", "Test: Frame 10 - Just rolled double strike");
+        await JSRuntime.InvokeAsync<object>("logMessage", "Passed? " + (testgame.currentFrame == 10 && testgame.currentRoll == 3 && testgame.pins.Where(a =>a.upRight).Count() == 10).ToString());
         //    
 
 
@@ -323,9 +314,8 @@
         testgame.pins[0].upRight = true;
 
         testgame.advanceFrameAndRoll();
-        JSRuntime.InvokeAsync<object>("logMessage", "Test: Frame 10 - Just rolled strike then nine");
-        JSRuntime.InvokeAsync<object>("logMessage", "Passed? " + (testgame.currentFrame == 10 && testgame.currentRoll == 3 && testgame.pins.Where(a => a.upRight).Count() < 10).ToString());
-
+        await JSRuntime.InvokeAsync<object>("logMessage", "Test: Frame 10 - Just rolled strike then nine");
+        await JSRuntime.InvokeAsync<object>("logMessage", "Passed? " + (testgame.currentFrame == 10 && testgame.currentRoll == 3 && testgame.pins.Where(a => a.upRight).Count() < 10).ToString());
 
     }
 

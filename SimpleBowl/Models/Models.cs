@@ -10,7 +10,6 @@ namespace SimpleBowl.Models
         public string state { get; set; } = "start";
         public int score { get; set; }
         public string scoreHeader { get; set; }
-
         public string display { get; set; }
         public int currentFrame { get; set; }
         public int currentRoll { get; set; }
@@ -19,6 +18,10 @@ namespace SimpleBowl.Models
         public Ball ball { get; set; }
         public List<Pin> pins { get; set; }
 
+        public BowlingGame()
+            {
+                setUp();
+            }
 
         public void incrementFrame()
         {
@@ -37,12 +40,7 @@ namespace SimpleBowl.Models
                 if (currentFrame == 10 && currentRoll < 3) currentRoll++;
             }
         }
-
-        public BowlingGame()
-        {
-            setUp();
-        }
-
+  
         public Frame getCurrentFrame()
         {
             return frames.Where(f => f.number == currentFrame).FirstOrDefault();
@@ -250,12 +248,12 @@ namespace SimpleBowl.Models
         {
             return currentRoll ==3;
         }
+
         public bool isTenthFrame()
         {
             return currentFrame == 10;
         }
     }
-
 
 
     public class Frame
@@ -267,6 +265,7 @@ namespace SimpleBowl.Models
         public string frameType { get; set; }
 
         public List<Roll> rolls {get;set;}
+
         public Frame(int nmbr)
         {
             number = nmbr;
@@ -291,7 +290,6 @@ namespace SimpleBowl.Models
         {
             return (rolls[0].score > 9 && rolls[1].score > 9);
         }
-
 
     }
 

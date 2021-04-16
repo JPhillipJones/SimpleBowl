@@ -57,15 +57,16 @@
             for (i = 0; i < 10; i++) {
                 drawPin(pinX[i], pinY[i], pinUpright[i], ctx);
             }
-
         }
 
         function setDisplay(message){
             document.getElementById("Display").textContent = message;
         }
+
         function setScore(message) {
             document.getElementById("Score").textContent = message;
         }
+
         function setScoreHeader(message) {
             document.getElementById("ScoreHeader").textContent = message;
         }
@@ -73,13 +74,14 @@
         function logState(frame, roll, score) {
             console.log("Frame: " + frame + " Roll: " + roll + " Score: " + score);
         }
+
         function logMessage(message) {
             console.log(message);
         }
+
         function renderScoresTable(message) {
             var container = document.getElementById("scoresContainer");
             container.innerHTML = message;
-
         }
 
     </script>
